@@ -51,21 +51,25 @@ export const messageSend = asyncHandler(async (req, res) => {
 export const getMeassages = asyncHandler(async (req, res) => {
   // get id from params
 
-  const { id: userToChatId } = req.params;
-  if (!userToChatId) throw new ApiError(401, "please provide user id");
+  const userToChatId = req.params.id;
+  console.log("🚀 ~ getMeassages ~ userToChatId:", userToChatId);
 
   // get sender id
 
   const senderId = req.user?._id;
-  if (!senderId)
+  console.log("🚀 ~ getMeassages ~ senderId:", senderId);
+  if (!senderId) {
     throw new ApiError(500, "something went wrong went while get sender id");
+  }
 
+  if (userToChatId == senderId) {
+    throw new ApiError(401, "sender id and receiverid should not be same!");
+  }
   // find chats
   const conversation = await Conversation.findOne({
     participants: { $all: [senderId, userToChatId] },
   }).populate("messages");
 
-  if (!conversation) throw new ApiResponse(200, []);
-
+  if (!conversation) throw new ApiError(401, "No chats available");
   return res.status(200).json(new ApiResponse(200, conversation?.messages));
 });
