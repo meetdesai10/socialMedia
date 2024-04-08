@@ -3,6 +3,7 @@ import {
   logOutUser,
   loginUser,
   registerUser,
+  sideBarUser,
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 const router = Router();
@@ -16,3 +17,6 @@ router.route("/login").post(loginUser);
 // logout
 router.route("/logOut").post(verifyJwt, logOutUser);
 export default router;
+
+// get user for sidebar
+router.route("/getSiderBarUsers").get(verifyJwt, sideBarUser);

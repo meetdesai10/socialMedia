@@ -26,3 +26,10 @@ app.use(cookieParser());
 
 import userRouter from "./src/routes/user.routes.js";
 app.use("/api/v1/users", userRouter);
+
+// ---------------------------- import message router ------------------------------
+
+import messageRouter from "./src/routes/message.routes.js";
+app.use("/api/v1/messages", messageRouter);
+
+

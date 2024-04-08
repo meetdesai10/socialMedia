@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { ApiError } from "../utils/APIError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { User } from "../models/user.models.js";
+import { User } from "../models/user.model.js";
 import { config } from "../../config.js";
 
 // ----------------- cookie options --------------------
@@ -196,4 +196,17 @@ const logOutUser = asyncHandler(async (req, res) => {
     .json({ message: "User logged Out" });
 });
 
-export { registerUser, loginUser, logOutUser };
+// ------------------------- get sidebar users --------------------------
+
+const sideBarUser = asyncHandler(async (req, res) => {
+  const loggedInUser = req.user?._id;
+  const filterUsers = await User.find({ _id: { $ne: loggedInUser } }).select(
+    "-password -refreshToken"
+  );
+  if (!filterUsers)
+    throw new ApiError(500, "somthing went wrong while fetching all users");
+
+  return res.status(config.SUCCESS).json(config.SUCCESS, filterUsers);
+});
+
+export { registerUser, loginUser, logOutUser, sideBarUser };
