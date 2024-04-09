@@ -1,17 +1,17 @@
-import express, { Router } from "express";
+import { Router } from "express";
 import {
   followAndUnfollow,
   getFollowingsAndFollowers,
-} from "../controllers/post.conrtollers.js";
+} from "../controllers/followAndUnfollow.conrtollers.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 // ----------------------------- follow -------------------------
-router.route("/followAndUnfollow/:id").post(verifyJwt, followAndUnfollow);
+router.route("/follow-and-unfollow/:id").post(verifyJwt, followAndUnfollow);
 
 // ------------------- getFollowers and following -------------------
 router
-  .route("/getFollowingsAndFollowers/:id")
+  .route("/get-followings-and-followers/:id")
   .get(verifyJwt, getFollowingsAndFollowers);
 
 export default router;

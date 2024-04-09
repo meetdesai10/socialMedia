@@ -36,5 +36,5 @@ app.use("/api/v1/messages", messageRouter);
 
 // --------------------------- import post router-----------------------------------
 
-import postRouter from "./src/routes/post.routes.js";
+import postRouter from "./src/routes/followAndUnfollow.routes.js";
 app.use("/api/v1/post", postRouter);

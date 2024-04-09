@@ -301,11 +301,18 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     );
 });
 
+const getCurrentUserProfile = asyncHandler(async (req, res) => {
+  const { _id } = req?.user;
+  const user = await User.findOne(_id).select("-password");
+
+  res.status(config.SUCCESS).json(config.SUCCESS, user);
+});
 // export all files
 
 export {
   registerUser,
   loginUser,
+  getCurrentUserProfile,
   logOutUser,
   sideBarUser,
   forgetPassword,
