@@ -12,27 +12,27 @@ import {
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 const router = Router();
 
-//--------------------- register user------------------------
+//--------------------- register user-------------------------
 router.route("/register").post(registerUser);
 
-// -------------------------login user---------------------
+// -------------------------login user------------------------
 router.route("/login").post(loginUser);
 
 // ---------------------get current users---------------------
 router.route("/get-current-user-profile").get(verifyJwt, getCurrentUserProfile);
 
-//------------------------ logout-----------------------
+//------------------------ logout-----------------------------
 router.route("/logout").post(verifyJwt, logOutUser);
 export default router;
 
-// ------------------------get user for sidebar---------------------
+// ------------------------get user for sidebar---------------
 router.route("/get-sider-bar-users").get(verifyJwt, sideBarUser);
 
-//--------------------------- reset password------------------------------
+//--------------------------- reset password------------------
 router.route("/reset-password").post(verifyJwt, resetPassword);
 
-// --------------------------forget password--------------------
+// --------------------------forget password------------------
 router.route("/forget-password").post(verifyJwt, forgetPassword);
 
-//---------------------- update Account Details----------------------------
+//---------------------- update Account Details---------------
 router.route("/update-account-details").post(verifyJwt, updateAccountDetails);

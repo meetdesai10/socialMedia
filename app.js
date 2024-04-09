@@ -29,12 +29,17 @@ app.use(cookieParser());
 import userRouter from "./src/routes/user.routes.js";
 app.use("/api/v1/users", userRouter);
 
-// ---------------------------- import message router ------------------------------
+// ---------------------------- import message router ----------------------------
 
 import messageRouter from "./src/routes/message.routes.js";
 app.use("/api/v1/messages", messageRouter);
 
-// --------------------------- import post router-----------------------------------
+// --------------------------- import followAndUnfollow router--------------------
 
-import postRouter from "./src/routes/followAndUnfollow.routes.js";
+import followAndUnfollowRouter from "./src/routes/followAndUnfollow.routes.js";
+app.use("/api/v1/followAndUnfollow", followAndUnfollowRouter);
+
+// --------------------------- import post router --------------------------------
+
+import postRouter from "./src/routes/post.routes.js";
 app.use("/api/v1/post", postRouter);
