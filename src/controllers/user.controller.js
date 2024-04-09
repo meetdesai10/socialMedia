@@ -209,4 +209,106 @@ const sideBarUser = asyncHandler(async (req, res) => {
   return res.status(config.SUCCESS).json(config.SUCCESS, filterUsers);
 });
 
-export { registerUser, loginUser, logOutUser, sideBarUser };
+// -------------------------------reset password ----------------------------
+
+const resetPassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword, confirmPassword } = req?.body;
+  const { _id } = req?.user;
+
+  // find user
+
+  const user = await User.findById(_id);
+
+  // check old password
+
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+
+  if (!isPasswordCorrect) {
+    throw new ApiError(401, "Invalid old password!!");
+  }
+  if (newPassword !== confirmPassword) {
+    throw new ApiError(401, "new and confirm password does not match!!");
+  }
+
+  user.password = newPassword;
+  await user.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        config.SUCCESS,
+        {},
+        "you password has been changed successfully!!"
+      )
+    );
+});
+
+// -------------------------------- forget password --------------------------
+
+const forgetPassword = asyncHandler(async (req, res) => {
+  const { newPassword, confirmPassword } = req?.body;
+  const { _id } = req?.user;
+
+  // find user
+
+  const user = await User.findById(_id);
+
+  if (newPassword !== confirmPassword) {
+    throw new ApiError(401, "new and confirm password does not match");
+  }
+
+  user.password = newPassword;
+
+  await user.save({ validateBeforeSave: false });
+
+  res
+    .status(200)
+    .json(new ApiResponse(config.SUCCESS, {}, "password forget successfully"));
+});
+
+// --------------------------------- update account details ------------------------
+
+const updateAccountDetails = asyncHandler(async (req, res) => {
+  const { userName, fristName, lastName, email, contactNo, gender } = req?.body;
+
+  if (
+    [userName, fristName, lastName, email, contactNo, gender].some(
+      (item) => item?.trim() == ""
+    )
+  ) {
+    throw new ApiError(401, "all markable fields are required!!");
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req?.user?._id,
+    {
+      $set: { userName, fristName, lastName, email, contactNo, gender },
+    },
+    {
+      new: true,
+    }
+  ).select("-password -refreshToken");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        config.SUCCESS,
+        user,
+        "account details updated successfully"
+      )
+    );
+});
+
+// export all files
+
+export {
+  registerUser,
+  loginUser,
+  logOutUser,
+  sideBarUser,
+  forgetPassword,
+  resetPassword,
+  updateAccountDetails,
+};

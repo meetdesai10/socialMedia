@@ -1,9 +1,12 @@
 import { Router } from "express";
 import {
+  forgetPassword,
   logOutUser,
   loginUser,
   registerUser,
+  resetPassword,
   sideBarUser,
+  updateAccountDetails,
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 const router = Router();
@@ -20,3 +23,12 @@ export default router;
 
 // get user for sidebar
 router.route("/getSiderBarUsers").get(verifyJwt, sideBarUser);
+
+// reset password
+router.route("/reset-password").post(verifyJwt, resetPassword);
+
+// forget password
+router.route("/forget-password").post(verifyJwt, forgetPassword);
+
+// update Account Details
+router.route("/update-account-details").post(verifyJwt, updateAccountDetails);

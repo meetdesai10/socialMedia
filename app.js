@@ -9,12 +9,14 @@ export const app = express();
 app.use(express.json());
 
 // cors
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:8000",
+//     credentials: true,
+//   })
+// );
+
+app.use(cors());
 
 // to accept all url
 app.use(express.urlencoded({ extended: true }));
@@ -32,4 +34,7 @@ app.use("/api/v1/users", userRouter);
 import messageRouter from "./src/routes/message.routes.js";
 app.use("/api/v1/messages", messageRouter);
 
+// --------------------------- import post router-----------------------------------
 
+import postRouter from "./src/routes/post.routes.js";
+app.use("/api/v1/post", postRouter);

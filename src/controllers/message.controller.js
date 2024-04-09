@@ -19,6 +19,10 @@ export const messageSend = asyncHandler(async (req, res) => {
     throw new ApiError(401, "please provide a userId in params");
   }
 
+  if (receiverId === senderId.toString()) {
+    throw new ApiError(401, "you can't send a message to your self!!");
+  }
+
   let conversation = await Conversation.findOne({
     participants: { $all: [senderId, receiverId] },
   });
@@ -52,18 +56,16 @@ export const getMeassages = asyncHandler(async (req, res) => {
   // get id from params
 
   const userToChatId = req.params.id;
-  console.log("🚀 ~ getMeassages ~ userToChatId:", userToChatId);
 
   // get sender id
 
   const senderId = req.user?._id;
-  console.log("🚀 ~ getMeassages ~ senderId:", senderId);
   if (!senderId) {
     throw new ApiError(500, "something went wrong went while get sender id");
   }
 
-  if (userToChatId == senderId) {
-    throw new ApiError(401, "sender id and receiverid should not be same!");
+  if (userToChatId === senderId.toString()) {
+    throw new ApiError(401, "you can't get your own chat!!");
   }
   // find chats
   const conversation = await Conversation.findOne({

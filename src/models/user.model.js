@@ -65,11 +65,27 @@ const userSchema = new mongoose.Schema(
       country: String,
       pinCode: String,
     },
-    followers: Number,
     postCount: Number,
-    following: Number,
-    caption: String,
-    profilePic: String,
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    bio: {
+      type: String,
+      default: "",
+    },
+    profilePic: {
+      type: String,
+      default: "",
+    },
     refreshToken: String,
   },
   { timestamps: true }
