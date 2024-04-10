@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { createPost, deletePost, getPosts } from "../controllers/post.controller.js";
+import {
+  createPost,
+  deletePost,
+  getAllPosts,
+  getPost,
+} from "../controllers/post.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 const router = Router();
 
@@ -7,9 +12,11 @@ const router = Router();
 router.route("/create").post(verifyJwt, createPost);
 
 // --------------------------- get posts ----------------------------
-router.route("/get-posts").get(verifyJwt, getPosts);
+router.route("/get-all-posts/:id").get(verifyJwt, getAllPosts);
 
 // --------------------------- get posts ----------------------------
 router.route("/delete-post/:id").delete(verifyJwt, deletePost);
 
+// --------------------------- get IndividualPosts ----------------------------
+router.route("/get-post/:id").get(verifyJwt, getPost);
 export default router;

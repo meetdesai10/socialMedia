@@ -40,25 +40,53 @@ const createPost = asyncHandler(async (req, res) => {
 });
 
 // ------------------------------ get posts ---------------------------------
-const getPosts = asyncHandler(async (req, res) => {
-  const { _id } = req?.user;
+const getAllPosts = asyncHandler(async (req, res) => {
+  const { id } = req?.params;
 
   const userPosts = await Post.find({
-    postedBy: _id,
+    postedBy: id,
   });
+
+  if (!userPosts) {
+    throw new ApiError(401, "post not found!!");
+  }
   res.send(userPosts);
+});
+
+// ------------------------------ get IndividualPosts  ---------------------------------
+const getPost = asyncHandler(async (req, res) => {
+  const { id } = req?.params;
+
+  const userPost = await Post.findById(id).populate({
+    path: "postedBy",
+    select: "-password -refreshToken",
+  });
+  if (!userPost) {
+    throw new ApiError(401, "post not found!!");
+  }
+  res.send(userPost);
 });
 
 // ------------------------------ get posts ---------------------------------
 const deletePost = asyncHandler(async (req, res) => {
   const { id } = req?.params;
 
-  const post = await Post.findByIdAndDelete(id);
-
+  const post = await Post.findById(id);
+  
   if (!post) {
-    throw new ApiError(401, "User not found!!");
+    throw new ApiError(401, "post not found!!");
   }
+  // check it is owner or not
+  if (post?.postedBy.toString() !== req?.user?._id.toString()) {
+    throw new ApiError(401, "Only owner can delete the post!!");
+  }
+
+  const deletedPost=await Post.findByIdAndDelete(id);
+  if(!deletedPost){
+    throw new ApiError(500,"somthing went wrong while deleting the post!!")
+  }
+
 
   res.status(200).json(new ApiResponse(200, {}, "Post delete successfully!!"));
 });
-export { createPost, getPosts, deletePost };
+export { createPost, getAllPosts, deletePost, getPost };
