@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
+import nodemailer from "nodemailer";
 import { ApiError } from "../utils/APIError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 import { config } from "../../config.js";
-
+import crypto from "crypto";
 // ----------------- cookie options --------------------
 const options = {
   httpOnly: true,
@@ -14,16 +14,11 @@ const options = {
 
 // ----------------- methods -----------------
 
-// generate referesh and accesstoken
-
+//-------------------------------- generate referesh and accesstoken-----------------
 async function generateAccessAndrefreshToken(userId) {
   try {
     const user = await User.findById(userId);
     const accessToken = await user.generateAccessToken();
-    console.log(
-      "🚀 ~ generateAccessAndrefreshToken ~ accessToken:",
-      accessToken
-    );
     const refreshToken = await user.generaterefreshToken();
     console.log("refreshToken:", refreshToken);
     user.refreshToken = refreshToken;
@@ -34,7 +29,21 @@ async function generateAccessAndrefreshToken(userId) {
   }
 }
 
-// ---------------------------- register user controller --------------------------------
+// ---------------------------------------generate otp -------------------------------
+
+function generateOTP(length) {
+  if (length <= 0 || length > 10) {
+    throw new Error("Invalid OTP length. Length should be between 1 and 10.");
+  }
+
+  const min = Math.pow(10, length - 1);
+  const max = Math.pow(10, length) - 1;
+
+  // Generate a random number within the specified range
+  const otp = Math.floor(min + Math.random() * (max - min + 1));
+  return otp.toString();
+}
+// ---------------------------- register user controller -----------------------------
 
 const registerUser = asyncHandler(async (req, res) => {
   const {
@@ -196,7 +205,7 @@ const logOutUser = asyncHandler(async (req, res) => {
     .json({ message: "User logged Out" });
 });
 
-// ------------------------- get sidebar users --------------------------
+// ------------------------- get sidebar users ----------------------------------------
 
 const sideBarUser = asyncHandler(async (req, res) => {
   const loggedInUser = req.user?._id;
@@ -209,7 +218,7 @@ const sideBarUser = asyncHandler(async (req, res) => {
   return res.status(config.SUCCESS).json(config.SUCCESS, filterUsers);
 });
 
-// -------------------------------reset password ----------------------------
+// -------------------------------reset password --------------------------------------
 
 const resetPassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword, confirmPassword } = req?.body;
@@ -244,7 +253,7 @@ const resetPassword = asyncHandler(async (req, res) => {
     );
 });
 
-// -------------------------------- forget password --------------------------
+// -------------------------------- forget password -----------------------------------
 
 const forgetPassword = asyncHandler(async (req, res) => {
   const { newPassword, confirmPassword } = req?.body;
@@ -267,7 +276,7 @@ const forgetPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(config.SUCCESS, {}, "password forget successfully"));
 });
 
-// --------------------------------- update account details ------------------------
+// --------------------------------- update account details ---------------------------
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
   const { userName, fristName, lastName, email, contactNo, gender } = req?.body;
@@ -301,13 +310,97 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     );
 });
 
+// ----------------------------------- get current user profile -----------------------
 const getCurrentUserProfile = asyncHandler(async (req, res) => {
   const { _id } = req?.user;
   const user = await User.findOne(_id).select("-password");
 
   res.status(config.SUCCESS).json(config.SUCCESS, user);
 });
-// export all files
+
+// -------------------------------- send mail------------------------------------------
+const sendMail = asyncHandler(async (req, res, next) => {
+  const { email } = req?.body;
+  // check email
+  if (!email) {
+    throw new ApiError(401, "please provide email Id!!");
+  }
+
+  // check useris exis or not
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(
+      401,
+      "enter your email address that you used for register!!"
+    );
+  }
+
+  // connect with the smtp server
+  const transporter = await nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    secure: false,
+    auth: {
+      user: "	edgardo.beer@ethereal.email",
+      pass: "ErjV1BXxaQJTXqtAQe",
+    },
+  });
+
+  // check transporter
+  if (!transporter) {
+    throw new ApiError(
+      config.INTERNAL_SERVER_ERROR,
+      "something went wrong in transporter"
+    );
+  }
+
+  // generate otp
+  const otp = await generateOTP(4, email);
+  if (!otp) {
+    throw new ApiError(
+      config.INTERNAL_SERVER_ERROR,
+      "somthing went wrong while generating otp"
+    );
+  }
+
+  // set otp to user
+  const otpVerification = {
+    otp,
+    email,
+  };
+  req.otp = otpVerification;
+  console.log("🚀 ~ sendMail ~ req.otp:", req.otp);
+  // send mail
+  const info = await transporter.sendMail({
+    from: email, // sender address
+    to: "dmeet1008@gmail.com", // list of receivers
+    subject: "Hello meet desai ✔", // Subject line
+    html: `<b>your otp is ${otp} !!</b>`, // html body
+  });
+
+  // check mail send or not
+  if (!info) {
+    throw new ApiError(
+      config.INTERNAL_SERVER_ERROR,
+      "something went wrong while sending mail"
+    );
+  }
+  res
+    .status(config.SUCCESS)
+    .json(new ApiResponse(config.SUCCESS, "mail has been send successfully!!"));
+
+  next();
+});
+
+// ---------------------------------- otp verification -----------------------------------
+const otpVerfication = asyncHandler(async (req, res) => {
+  // const { otpClient } = req?.params;
+  console.log(req.otp);
+  // res.send({ otpClient, otpDetails });
+});
+
+//---------------------------------- export all files ---------------------------------
 
 export {
   registerUser,
@@ -318,4 +411,6 @@ export {
   forgetPassword,
   resetPassword,
   updateAccountDetails,
+  sendMail,
+  otpVerfication,
 };

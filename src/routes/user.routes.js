@@ -4,8 +4,10 @@ import {
   getCurrentUserProfile,
   logOutUser,
   loginUser,
+  otpVerfication,
   registerUser,
   resetPassword,
+  sendMail,
   sideBarUser,
   updateAccountDetails,
 } from "../controllers/user.controller.js";
@@ -36,3 +38,9 @@ router.route("/forget-password").post(verifyJwt, forgetPassword);
 
 //---------------------- update Account Details---------------
 router.route("/update-account-details").post(verifyJwt, updateAccountDetails);
+
+// ---- send otp mail to user for forgetpassword--------------
+router.route("/send-otp-mail").post(sendMail);
+
+// ---------------------- otp verification ------------------
+router.route("/verify-otp/:otpClient").get(otpVerfication);
