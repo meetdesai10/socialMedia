@@ -338,12 +338,11 @@ const sendMail = asyncHandler(async (req, res, next) => {
 
   // connect with the smtp server
   const transporter = await nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
+    service: "gmail",
     secure: false,
     auth: {
-      user: "	edgardo.beer@ethereal.email",
-      pass: "ErjV1BXxaQJTXqtAQe",
+      user: "dmeet1008@gmail.com",
+      pass: "ckad jvpq nrwm tcoc",
     },
   });
 
@@ -369,8 +368,9 @@ const sendMail = asyncHandler(async (req, res, next) => {
     otp,
     email,
   };
-  req.otp = otpVerification;
-  console.log("🚀 ~ sendMail ~ req.otp:", req.otp);
+
+  user.otpDetails = otpVerification;
+  await user.save({ validateBeforeSave: false });
   // send mail
   const info = await transporter.sendMail({
     from: email, // sender address
@@ -386,18 +386,28 @@ const sendMail = asyncHandler(async (req, res, next) => {
       "something went wrong while sending mail"
     );
   }
-  res
-    .status(config.SUCCESS)
-    .json(new ApiResponse(config.SUCCESS, "mail has been send successfully!!"));
+  res.status(config.SUCCESS).json(
+    new ApiResponse(config.SUCCESS, {
+      message: `mail has been send successfully!!`,
+      email,
+    })
+  );
 
   next();
 });
 
 // ---------------------------------- otp verification -----------------------------------
 const otpVerfication = asyncHandler(async (req, res) => {
-  // const { otpClient } = req?.params;
-  console.log(req.otp);
-  // res.send({ otpClient, otpDetails });
+  const { otpClient } = req?.params;
+  const { email } = req?.body;
+  const user = await User.findOne({ email });
+
+  if (otpClient.toString() !== user?.otpDetails?.otp) {
+    throw new ApiError(401, "invalid or wrong otp!!");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "verified successfully!!"));
 });
 
 //---------------------------------- export all files ---------------------------------

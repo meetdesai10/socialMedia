@@ -86,6 +86,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    otpDetails: {
+      type: Object,
+    },
     refreshToken: String,
   },
   { timestamps: true }

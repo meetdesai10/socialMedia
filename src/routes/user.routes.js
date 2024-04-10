@@ -43,4 +43,4 @@ router.route("/update-account-details").post(verifyJwt, updateAccountDetails);
 router.route("/send-otp-mail").post(sendMail);
 
 // ---------------------- otp verification ------------------
-router.route("/verify-otp/:otpClient").get(otpVerfication);
+router.route("/verify-otp/:otpClient").post(otpVerfication);
