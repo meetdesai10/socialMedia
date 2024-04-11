@@ -36,7 +36,7 @@ const createPost = asyncHandler(async (req, res) => {
   //   send response
   return res
     .status(200)
-    .json(new ApiResponse(200, newPost, "post created successfully!!"));
+    .send(new ApiResponse(200, newPost, "post created successfully!!"));
 });
 
 // ------------------------------ get posts ---------------------------------
@@ -72,7 +72,7 @@ const deletePost = asyncHandler(async (req, res) => {
   const { id } = req?.params;
 
   const post = await Post.findById(id);
-  
+
   if (!post) {
     throw new ApiError(401, "post not found!!");
   }
@@ -81,12 +81,15 @@ const deletePost = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Only owner can delete the post!!");
   }
 
-  const deletedPost=await Post.findByIdAndDelete(id);
-  if(!deletedPost){
-    throw new ApiError(500,"somthing went wrong while deleting the post!!")
+  const deletedPost = await Post.findByIdAndDelete(id);
+  if (!deletedPost) {
+    throw new ApiError(500, "somthing went wrong while deleting the post!!");
   }
 
-
-  res.status(200).json(new ApiResponse(200, {}, "Post delete successfully!!"));
+  res.status(200).send(new ApiResponse(200, {}, "Post delete successfully!!"));
 });
+
+// ------------------------------- likeUnlikes---------------------------------------
+
+
 export { createPost, getAllPosts, deletePost, getPost };

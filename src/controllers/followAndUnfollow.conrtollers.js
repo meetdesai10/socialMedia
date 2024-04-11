@@ -35,7 +35,7 @@ const followAndUnfollow = asyncHandler(async (req, res) => {
     });
     return res
       .status(config.SUCCESS)
-      .json(
+      .send(
         new ApiResponse(
           config.SUCCESS,
           {},
@@ -50,7 +50,7 @@ const followAndUnfollow = asyncHandler(async (req, res) => {
     });
     return res
       .status(config.SUCCESS)
-      .json(
+      .send(
         new ApiResponse(
           config.SUCCESS,
           {},
@@ -94,7 +94,7 @@ const getFollowingsAndFollowers = asyncHandler(async (req, res) => {
   //   if (user.following.length == 0) {
   //     throw new ApiError(401, "no followings found!!");
   //   }
-  res.status(200).json(
+  res.status(200).send(
     new ApiResponse(config.SUCCESS, {
       followers: userFollower?.followers,
       followings: userFollowing?.following,

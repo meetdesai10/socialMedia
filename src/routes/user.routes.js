@@ -20,12 +20,12 @@ router.route("/register").post(registerUser);
 // -------------------------login user------------------------
 router.route("/login").post(loginUser);
 
-// ---------------------get current users---------------------
-router.route("/get-current-user-profile").get(verifyJwt, getCurrentUserProfile);
-
 //------------------------ logout-----------------------------
 router.route("/logout").post(verifyJwt, logOutUser);
 export default router;
+// ---------------------get current users---------------------
+router.route("/get-current-user-profile").get(verifyJwt, getCurrentUserProfile);
+
 
 // ------------------------get user for sidebar---------------
 router.route("/get-sider-bar-users").get(verifyJwt, sideBarUser);

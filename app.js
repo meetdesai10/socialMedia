@@ -8,15 +8,12 @@ export const app = express();
 // to accept json data
 app.use(express.json());
 
-// cors
-// app.use(
-//   cors({
-//     origin: "http://localhost:8000",
-//     credentials: true,
-//   })
-// );
-
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 // to accept all url
 app.use(express.urlencoded({ extended: true }));
@@ -40,6 +37,9 @@ import followAndUnfollowRouter from "./src/routes/followAndUnfollow.routes.js";
 app.use("/api/v1/followAndUnfollow", followAndUnfollowRouter);
 
 // --------------------------- import post router --------------------------------
-
 import postRouter from "./src/routes/post.routes.js";
 app.use("/api/v1/post", postRouter);
+
+// --------------------------- import like router --------------------------------
+import likeRouter from "./src/routes/like.routes.js";
+app.use("/api/v1/like", likeRouter);

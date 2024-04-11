@@ -47,7 +47,7 @@ export const messageSend = asyncHandler(async (req, res) => {
 
   return res
     .status(config.SUCCESS)
-    .json(new ApiResponse(config.SUCCESS, newMessage));
+    .send(new ApiResponse(config.SUCCESS, newMessage));
 });
 
 // ----------------------------- get messages ---------------------------------------
@@ -73,5 +73,5 @@ export const getMeassages = asyncHandler(async (req, res) => {
   }).populate("messages");
 
   if (!conversation) throw new ApiError(401, "No chats available");
-  return res.status(200).json(new ApiResponse(200, conversation?.messages));
+  return res.status(200).send(new ApiResponse(200, conversation?.messages));
 });

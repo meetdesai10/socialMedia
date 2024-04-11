@@ -8,15 +8,17 @@ import {
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 const router = Router();
 
-// --------------------------- create post ----------------------------
+// --------------------------- create post ------------------------------
 router.route("/create").post(verifyJwt, createPost);
 
-// --------------------------- get posts ----------------------------
+// --------------------------- get posts --------------------------------
 router.route("/get-all-posts/:id").get(verifyJwt, getAllPosts);
 
-// --------------------------- get posts ----------------------------
+// --------------------------- get posts --------------------------------
 router.route("/delete-post/:id").delete(verifyJwt, deletePost);
 
-// --------------------------- get IndividualPosts ----------------------------
+// --------------------------- get IndividualPosts -----------------------
 router.route("/get-post/:id").get(verifyJwt, getPost);
+
+
 export default router;

@@ -108,7 +108,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(
+    .send(
       new ApiResponse(
         config.SUCCESS,
         isUserCreated,
@@ -174,7 +174,7 @@ const loginUser = asyncHandler(async (req, res) => {
   res
     .cookie("accessToken", accessToken, options)
     .status(config.SUCCESS)
-    .json(
+    .send(
       new ApiResponse(
         config.SUCCESS,
         { user: loggedInUser, accessToken },
@@ -202,7 +202,7 @@ const logOutUser = asyncHandler(async (req, res) => {
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
-    .json({ message: "User logged Out" });
+    .send({ message: "User logged Out" });
 });
 
 // ------------------------- get sidebar users ----------------------------------------
@@ -215,7 +215,7 @@ const sideBarUser = asyncHandler(async (req, res) => {
   if (!filterUsers)
     throw new ApiError(500, "somthing went wrong while fetching all users");
 
-  return res.status(config.SUCCESS).json(config.SUCCESS, filterUsers);
+  return res.status(config.SUCCESS).send(config.SUCCESS, filterUsers);
 });
 
 // -------------------------------reset password --------------------------------------
@@ -244,7 +244,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(
+    .send(
       new ApiResponse(
         config.SUCCESS,
         {},
@@ -273,7 +273,7 @@ const forgetPassword = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new ApiResponse(config.SUCCESS, {}, "password forget successfully"));
+    .send(new ApiResponse(config.SUCCESS, {}, "password forget successfully"));
 });
 
 // --------------------------------- update account details ---------------------------
@@ -301,7 +301,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(
+    .send(
       new ApiResponse(
         config.SUCCESS,
         user,
@@ -315,7 +315,7 @@ const getCurrentUserProfile = asyncHandler(async (req, res) => {
   const { _id } = req?.user;
   const user = await User.findOne(_id).select("-password");
 
-  res.status(config.SUCCESS).json(config.SUCCESS, user);
+  res.status(config.SUCCESS).send(config.SUCCESS, user);
 });
 
 // -------------------------------- send mail------------------------------------------
@@ -386,7 +386,7 @@ const sendMail = asyncHandler(async (req, res, next) => {
       "something went wrong while sending mail"
     );
   }
-  res.status(config.SUCCESS).json(
+  res.status(config.SUCCESS).send(
     new ApiResponse(config.SUCCESS, {
       message: `mail has been send successfully!!`,
       email,
@@ -407,7 +407,7 @@ const otpVerfication = asyncHandler(async (req, res) => {
   }
   return res
     .status(200)
-    .json(new ApiResponse(200, {}, "verified successfully!!"));
+    .send(new ApiResponse(200, {}, "verified successfully!!"));
 });
 
 //---------------------------------- export all files ---------------------------------
