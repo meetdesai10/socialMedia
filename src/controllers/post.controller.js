@@ -91,5 +91,4 @@ const deletePost = asyncHandler(async (req, res) => {
 
 // ------------------------------- likeUnlikes---------------------------------------
 
-
 export { createPost, getAllPosts, deletePost, getPost };

@@ -18,24 +18,10 @@ const postSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    replies: [
-      {
-        userId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-        text: {
-          type: String,
-          required: true,
-        },
-        userProfilePic: {
-          type: String,
-        },
-        userName: {
-          type: String,
-        },
-      },
-    ],
+    replies: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

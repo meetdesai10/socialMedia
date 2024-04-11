@@ -1,4 +1,4 @@
-import { Like } from "../models/likes.js";
+import { Like } from "../models/likes.models.js";
 import { Post } from "../models/post.model.js";
 import { ApiError } from "../utils/APIError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";

@@ -43,3 +43,7 @@ app.use("/api/v1/post", postRouter);
 // --------------------------- import like router --------------------------------
 import likeRouter from "./src/routes/like.routes.js";
 app.use("/api/v1/like", likeRouter);
+
+// --------------------------- import reply router --------------------------------
+import replyRouter from "./src/routes/replyPost.routes.js";
+app.use("/api/v1/reply", replyRouter);
