@@ -13,9 +13,6 @@ const commentOnPost = asyncHandler(async (req, res) => {
     throw new ApiError(401, "all fields are required!!");
   }
 
-  if (!replyCount) {
-    throw new ApiError(500, "somthign went wrong while increase counting!!");
-  }
   //   create reply
   const replyCreate = await Reply.create({ postId, userId: user?._id, text });
   if (!replyCreate) {
@@ -26,6 +23,9 @@ const commentOnPost = asyncHandler(async (req, res) => {
     { _id: postId },
     { $inc: { replies: 1 } }
   );
+  if (!replyCount) {
+    throw new ApiError(500, "somthign went wrong while increase counting!!");
+  }
   return res
     .status(200)
     .send(
@@ -40,15 +40,16 @@ const commentOnPost = asyncHandler(async (req, res) => {
 // --------------------------------postAllComment -------------------------
 const postAllComment = asyncHandler(async (req, res) => {
   const { id } = req?.params;
-  const allComments = await Reply.find({ id }).populate({
+  const allComments = await Reply.find({ postId: id }).populate({
     path: "userId",
-    select: "-password -refreshToken -email -contactNo -bio ",
+    select:
+      "-password -refreshToken -email -contactNo -bio -gender -followers  -following -createdAt -updatedAt",
   });
   if (!allComments) {
     throw new ApiError(500, "somthing went wrong while finding all comments!!");
   }
 
-  return res.status(200).send(new ApiError(200, allComments));
+  return res.status(200).send(new ApiResponse(200, allComments));
 });
 
 // --------------------------------delete Comment -------------------------

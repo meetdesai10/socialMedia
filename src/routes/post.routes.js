@@ -20,5 +20,4 @@ router.route("/delete-post/:id").delete(verifyJwt, deletePost);
 // --------------------------- get IndividualPosts -----------------------
 router.route("/get-post/:id").get(verifyJwt, getPost);
 
-
 export default router;

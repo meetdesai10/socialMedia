@@ -47,3 +47,7 @@ app.use("/api/v1/like", likeRouter);
 // --------------------------- import reply router --------------------------------
 import replyRouter from "./src/routes/replyPost.routes.js";
 app.use("/api/v1/reply", replyRouter);
+
+// --------------------------- import savepost router --------------------------------
+import savePostRouter from "./src/routes/savePost.routes.js";
+app.use("/api/v1/save", savePostRouter);

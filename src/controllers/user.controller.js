@@ -313,11 +313,22 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 // ----------------------------------- get current user profile -----------------------
 const getCurrentUserProfile = asyncHandler(async (req, res) => {
   const { _id } = req?.user;
-  const user = await User.findOne(_id).select("-password");
+  const user = await User.findOne(_id).select("-password -refreshToken");
 
   res.status(config.SUCCESS).send(config.SUCCESS, user);
 });
 
+// --------------------------------------get User Profile --------------------------------
+const getUserProfile = asyncHandler(async (req, res) => {
+  const { id } = req?.params;
+  const user = await User.findOne({ _id: id }).select(
+    "-password -refreshToken"
+  );
+  if (!user) {
+    throw new ApiError(401, "User not found!!");
+  }
+  return res.status(200).send(new ApiResponse(200, user));
+});
 // -------------------------------- send mail------------------------------------------
 const sendMail = asyncHandler(async (req, res, next) => {
   const { email } = req?.body;
@@ -423,4 +434,5 @@ export {
   updateAccountDetails,
   sendMail,
   otpVerfication,
+  getUserProfile,
 };

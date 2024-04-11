@@ -10,6 +10,7 @@ import {
   sendMail,
   sideBarUser,
   updateAccountDetails,
+  getUserProfile
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 const router = Router();
@@ -23,9 +24,12 @@ router.route("/login").post(loginUser);
 //------------------------ logout-----------------------------
 router.route("/logout").post(verifyJwt, logOutUser);
 export default router;
+
 // ---------------------get current users---------------------
 router.route("/get-current-user-profile").get(verifyJwt, getCurrentUserProfile);
 
+// ---------------------get current users---------------------
+router.route("/get-user-profile/:id").get(verifyJwt, getUserProfile);
 
 // ------------------------get user for sidebar---------------
 router.route("/get-sider-bar-users").get(verifyJwt, sideBarUser);
