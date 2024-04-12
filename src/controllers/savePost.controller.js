@@ -4,7 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { Post } from "../models/post.model.js";
 import { SavePost } from "../models/savePost.model.js";
 
-// ------------------------------save post ---------------------------
+// ------------------------------ save post ---------------------------
 const savePost = asyncHandler(async (req, res) => {
   const { id } = req?.params;
   const { _id } = req?.user;
@@ -41,7 +41,7 @@ const savePost = asyncHandler(async (req, res) => {
   }
 });
 
-// ------------------------------get all save post-----------------------
+// ------------------------------get all save post---------------------
 const getAllSavedPost = asyncHandler(async (req, res) => {
   const { id } = req?.params;
   const { _id } = req?.user;
@@ -72,4 +72,20 @@ const getAllSavedPost = asyncHandler(async (req, res) => {
 
   return res.status(200).send(new ApiResponse(200, savedPost));
 });
-export { savePost, getAllSavedPost };
+
+// ------------------------ check post save or not------------------------
+const checkPostSaveOrNot = asyncHandler(async (req, res) => {
+  const { id } = req?.params;
+
+  const findPostSaveOrNot = await SavePost.findOne({
+    postId: id,
+    userId: req?.user?._id,
+  });
+
+  if (!findPostSaveOrNot) {
+    res.status(200).send(new ApiResponse(200, false, "post does not saved!!"));
+  } else {
+    res.status(200).send(new ApiResponse(200, true, "post saved!!"));
+  }
+});
+export { savePost, getAllSavedPost, checkPostSaveOrNot };

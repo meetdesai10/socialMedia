@@ -1,7 +1,8 @@
 import { Router } from "express";
 import {
   followAndUnfollow,
-  getFollowingsAndFollowers,
+  getFollowers,
+  getFollowings,
 } from "../controllers/followAndUnfollow.conrtollers.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 const router = Router();
@@ -9,9 +10,10 @@ const router = Router();
 // ----------------------------- follow -------------------------
 router.route("/follow-and-unfollow/:id").post(verifyJwt, followAndUnfollow);
 
-// ------------------- getFollowers and following -------------------
-router
-  .route("/get-followings-and-followers/:id")
-  .get(verifyJwt, getFollowingsAndFollowers);
+// ------------------- getfollowing -----------------------------
+router.route("/get-followings/:id").get(verifyJwt, getFollowings);
+
+// ------------------- getFollowers------------------------------
+router.route("/get-followers/:id").get(verifyJwt, getFollowers);
 
 export default router;

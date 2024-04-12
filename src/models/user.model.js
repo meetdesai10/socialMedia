@@ -66,18 +66,16 @@ const userSchema = new mongoose.Schema(
       pinCode: String,
     },
     postCount: Number,
-    followers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    following: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    followers: {
+      type: Number,
+      default: 0,
+    },
+
+    following: {
+      type: Number,
+      default: 0,
+    },
+
     bio: {
       type: String,
       default: "",
