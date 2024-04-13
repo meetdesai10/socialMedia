@@ -50,7 +50,7 @@ const getAllPosts = asyncHandler(async (req, res) => {
   if (!userPosts) {
     throw new ApiError(401, "post not found!!");
   }
-  res.send(userPosts);
+  res.status(200).send(new ApiResponse(200, userPosts));
 });
 
 // ------------------------------ get IndividualPosts  ---------------------------------
@@ -64,7 +64,7 @@ const getPost = asyncHandler(async (req, res) => {
   if (!userPost) {
     throw new ApiError(401, "post not found!!");
   }
-  res.send(userPost);
+  res.status(200).send(new ApiResponse(200, userPost));
 });
 
 // ------------------------------ get posts ---------------------------------

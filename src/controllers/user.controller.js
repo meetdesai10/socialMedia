@@ -55,6 +55,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     confirmPassword,
     gender,
+    privateAccount,
   } = req.body;
 
   //  check all fields that are required
@@ -98,6 +99,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     contactNo,
     password,
+    privateAccount: privateAccount ? privateAccount : false,
   });
 
   // check user successfully created or not
@@ -207,10 +209,10 @@ const logOutUser = asyncHandler(async (req, res) => {
 
 // ------------------------- get sidebar users ----------------------------------------
 
-const sideBarUser = asyncHandler(async (req, res) => {
+const getAllUser = asyncHandler(async (req, res) => {
   const loggedInUser = req.user?._id;
-  const filterUsers = await User.find({ _id: { $ne: loggedInUser } }).select(
-    "-password -refreshToken"
+  const filterUsers = await User.find().select(
+    "-password -refreshToken -updatedAt -createdAt"
   );
   if (!filterUsers)
     throw new ApiError(500, "somthing went wrong while fetching all users");
@@ -428,7 +430,7 @@ export {
   loginUser,
   getCurrentUserProfile,
   logOutUser,
-  sideBarUser,
+  getAllUser,
   forgetPassword,
   resetPassword,
   updateAccountDetails,

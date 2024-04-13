@@ -88,6 +88,9 @@ const userSchema = new mongoose.Schema(
       type: Object,
     },
     refreshToken: String,
+    privateAccount: {
+      type: Boolean,
+    },
   },
   { timestamps: true }
 );

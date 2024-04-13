@@ -2,13 +2,17 @@ import mongoose from "mongoose";
 
 const folloUnfolloSchema = new mongoose.Schema(
   {
-    logginUser: {
+    senderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    followUser: {
+    receiverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+    },
+    status: {
+      type: String,
+      enum: ["pending", "accept"],
     },
   },
 

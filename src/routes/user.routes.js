@@ -8,9 +8,9 @@ import {
   registerUser,
   resetPassword,
   sendMail,
-  sideBarUser,
   updateAccountDetails,
-  getUserProfile
+  getUserProfile,
+  getAllUser,
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 const router = Router();
@@ -32,7 +32,7 @@ router.route("/get-current-user-profile").get(verifyJwt, getCurrentUserProfile);
 router.route("/get-user-profile/:id").get(verifyJwt, getUserProfile);
 
 // ------------------------get user for sidebar---------------
-router.route("/get-sider-bar-users").get(verifyJwt, sideBarUser);
+router.route("/get-all-users").get(verifyJwt, getAllUser);
 
 //--------------------------- reset password------------------
 router.route("/reset-password").post(verifyJwt, resetPassword);
