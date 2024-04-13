@@ -5,6 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 import { config } from "../../config.js";
 import crypto from "crypto";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 // ----------------- cookie options --------------------
 const options = {
   httpOnly: true,
@@ -287,6 +288,34 @@ const profilePicture = asyncHandler(async (req, res) => {
   if (!profilePictureLocalPath) {
     throw new ApiError(401, "profilepic is required!!");
   }
+
+  const propic = await uploadOnCloudinary(profilePictureLocalPath);
+  if (!propic?.url) {
+    throw new ApiError(
+      500,
+      "somthign has been wrong while uoploading image on cloudinary"
+    );
+  }
+  const user = await User.findByIdAndUpdate(
+    req?.user?._id,
+    {
+      profilePic: propic?.url,
+    },
+    { new: true }
+  );
+
+  if (!user) {
+    throw new ApiError(
+      500,
+      "somthing has been wrong while set propic url in the user details"
+    );
+  }
+
+  return res
+    .status(200)
+    .send(
+      new ApiResponse(200, user?.profilePic, "Image uploaded successfully!!")
+    );
 });
 
 // --------------------------------- update account details ---------------------------

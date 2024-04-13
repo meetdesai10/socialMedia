@@ -3,14 +3,30 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/APIError.js";
 import { User } from "../models/user.model.js";
 import { Post } from "../models/post.model.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 // ------------------------------- create post ------------------------------
 const createPost = asyncHandler(async (req, res) => {
-  const { postedBy, text, img } = req?.body;
+  const { postedBy, text } = req?.body;
 
   //   check fields
   if (!postedBy || !text) {
     throw new ApiError(401, "postedBy and Text fields are required!!");
+  }
+
+  const postImageLocalPath = req?.files?.postImage?.[0]?.path;
+
+  if (!postImageLocalPath) {
+    throw new ApiError(401, "please provide post image");
+  }
+
+  const postimg = await uploadOnCloudinary(postImageLocalPath);
+
+  if (!postimg?.url) {
+    throw new ApiError(
+      500,
+      "somthing has been wrong while uploading post image in cloudinary!!"
+    );
   }
 
   //   check user exist or not
@@ -31,7 +47,7 @@ const createPost = asyncHandler(async (req, res) => {
   }
 
   //   create post
-  const newPost = await Post.create({ postedBy, text, img });
+  const newPost = await Post.create({ postedBy, text, img: postimg?.url });
 
   //   send response
   return res
