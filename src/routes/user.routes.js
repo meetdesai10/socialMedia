@@ -11,8 +11,10 @@ import {
   updateAccountDetails,
   getUserProfile,
   getAllUser,
+  profilePicture,
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 const router = Router();
 
 //--------------------- register user-------------------------
@@ -20,6 +22,15 @@ router.route("/register").post(registerUser);
 
 // -------------------------login user------------------------
 router.route("/login").post(loginUser);
+
+// ---------------------- upload profile picture -------------
+router
+  .route("/profilePicture")
+  .post(
+    verifyJwt,
+    upload.fields([{ name: "profilePic", maxCount: 1 }]),
+    profilePicture
+  );
 
 //------------------------ logout-----------------------------
 router.route("/logout").post(verifyJwt, logOutUser);

@@ -43,6 +43,9 @@ function generateOTP(length) {
   const otp = Math.floor(min + Math.random() * (max - min + 1));
   return otp.toString();
 }
+
+// =============================================API's====================================
+
 // ---------------------------- register user controller -----------------------------
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -278,6 +281,14 @@ const forgetPassword = asyncHandler(async (req, res) => {
     .send(new ApiResponse(config.SUCCESS, {}, "password forget successfully"));
 });
 
+// ------------------------------------- upload profile----------------------------------
+const profilePicture = asyncHandler(async (req, res) => {
+  const profilePictureLocalPath = req?.files?.profilePic?.[0]?.path;
+  if (!profilePictureLocalPath) {
+    throw new ApiError(401, "profilepic is required!!");
+  }
+});
+
 // --------------------------------- update account details ---------------------------
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
@@ -331,6 +342,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
   return res.status(200).send(new ApiResponse(200, user));
 });
+
 // -------------------------------- send mail------------------------------------------
 const sendMail = asyncHandler(async (req, res, next) => {
   const { email } = req?.body;
@@ -432,6 +444,7 @@ export {
   logOutUser,
   getAllUser,
   forgetPassword,
+  profilePicture,
   resetPassword,
   updateAccountDetails,
   sendMail,
