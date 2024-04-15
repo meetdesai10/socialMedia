@@ -40,6 +40,13 @@ const commentOnPost = asyncHandler(async (req, res) => {
 // --------------------------------postAllComment -------------------------
 const postAllComment = asyncHandler(async (req, res) => {
   const { id } = req?.params;
+
+  // find post
+  const post = await Post.findById(id);
+
+  if (!post) {
+    throw new ApiError(404, "Post not found!!");
+  }
   const allComments = await Reply.find({ postId: id }).populate({
     path: "userId",
     select:
@@ -56,21 +63,35 @@ const postAllComment = asyncHandler(async (req, res) => {
 const deleteComment = asyncHandler(async (req, res) => {
   const { id } = req?.params;
 
-  const deleteComments = await Reply.findByIdAndDelete(id);
+  // delete post
+
+  const deleteComments = await Reply.findByIdAndDelete(id).populate("userId");
+  console.log("TCL: deleteComment -> deleteComments", deleteComments);
+
   if (!deleteComments) {
     throw new ApiError(500, "somthing went wrong while delete comment!!");
   }
+
   // increse count of replise
   const replyCount = await Post.findOneAndUpdate(
     { _id: deleteComments?.postId },
     { $inc: { replies: -1 } }
   );
+
   if (!replyCount) {
     throw new ApiError(
       500,
       "somthing went wrong while decrease commentcount!!"
     );
   }
-  return res.status(200).send(new ApiResponse(200, {}, "commet deleted!!"));
+  return res
+    .status(200)
+    .send(
+      new ApiResponse(
+        200,
+        {},
+        `you deleted ${deleteComments?.userId?.userName}'s comment!!`
+      )
+    );
 });
 export { commentOnPost, postAllComment, deleteComment };
