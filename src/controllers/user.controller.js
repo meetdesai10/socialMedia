@@ -7,10 +7,9 @@ import { config } from "../../config.js";
 import crypto from "crypto";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 // ----------------- cookie options --------------------
-
 const options = {
-  httpOnly: false,
-  secure: false,
+  httpOnly: true,
+  secure: true,
 };
 
 // ----------------- methods -----------------
