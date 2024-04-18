@@ -7,12 +7,13 @@ import { config } from "../../config.js";
 import crypto from "crypto";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 // ----------------- cookie options --------------------
-const expirationDate = new Date();
-expirationDate.setMonth(expirationDate.getMonth() + 1);
+const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+const thirtyDaysInMilliseconds = 30 * oneDayInMilliseconds;
 const options = {
-  expires: expirationDate,
-  httpOnly: false,
-  secure: false,
+  maxAge: thirtyDaysInMilliseconds,
+  httpOnly: true,
+  secure: true,
+  sameSite: "strict",
 };
 
 // ----------------- methods -----------------
