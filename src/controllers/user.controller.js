@@ -152,7 +152,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const isPasswordCorrect = await isUserExist.isPasswordCorrect(password);
 
   if (!isPasswordCorrect) {
-    throw new ApiError(config.BAD_REQUEST, "wrong password");
+    throw new ApiError(401, "wrong password");
   }
 
   // call refresh token and access token
@@ -186,7 +186,7 @@ const loginUser = asyncHandler(async (req, res) => {
     .send(
       new ApiResponse(
         config.SUCCESS,
-        { user: loggedInUser, accessToken },
+        { loggedInUser, accessToken },
         "loggedIn successfully!"
       )
     );
