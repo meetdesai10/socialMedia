@@ -462,7 +462,7 @@ const otpVerfication = asyncHandler(async (req, res) => {
   if (otpClient.toString() !== user?.otpDetails?.otp) {
     throw new ApiError(401, "invalid or wrong otp!!");
   }
-  user?.isVarify=true;
+  user.isVarify=true;
    user.save({validateBeforeSave:false});
   return res
     .status(200)
