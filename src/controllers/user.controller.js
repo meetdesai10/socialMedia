@@ -463,7 +463,7 @@ const otpVerfication = asyncHandler(async (req, res) => {
     throw new ApiError(401, "invalid or wrong otp!!");
   }
   user?.isVarify=true;
-   user.save();
+   user.save({validateBeforeSave:false});
   return res
     .status(200)
     .send(new ApiResponse(200, {}, "verified successfully!!"));
