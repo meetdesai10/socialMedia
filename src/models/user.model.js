@@ -87,6 +87,10 @@ const userSchema = new mongoose.Schema(
     otpDetails: {
       type: Object,
     },
+    isVarify: {
+      type: Boolean,
+      default: false,
+    },
     refreshToken: String,
     privateAccount: {
       type: Boolean,

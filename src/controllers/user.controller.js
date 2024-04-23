@@ -443,7 +443,7 @@ const sendMail = asyncHandler(async (req, res, next) => {
       "something went wrong while sending mail"
     );
   }
-  res.status(config.SUCCESS).send(
+  return res.status(config.SUCCESS).send(
     new ApiResponse(config.SUCCESS, {
       message: `mail has been send successfully!!`,
       email,
@@ -462,6 +462,8 @@ const otpVerfication = asyncHandler(async (req, res) => {
   if (otpClient.toString() !== user?.otpDetails?.otp) {
     throw new ApiError(401, "invalid or wrong otp!!");
   }
+  user?.isVarify=true;
+   user.save();
   return res
     .status(200)
     .send(new ApiResponse(200, {}, "verified successfully!!"));
