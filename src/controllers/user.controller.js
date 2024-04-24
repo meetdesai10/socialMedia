@@ -376,7 +376,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
 });
 
 // -------------------------------- send mail------------------------------------------
-const sendMail = asyncHandler(async (req, res, next) => {
+const sendMail = asyncHandler(async (req, res) => {
   const { email } = req?.body;
   // check email
   if (!email) {
@@ -399,7 +399,7 @@ const sendMail = asyncHandler(async (req, res, next) => {
     secure: false,
     auth: {
       user: "dmeet1008@gmail.com",
-      pass: "ckad jvpq nrwm tcoc",
+      pass: "tbax abag zjyq fhzr",
     },
   });
 
@@ -430,8 +430,8 @@ const sendMail = asyncHandler(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
   // send mail
   const info = await transporter.sendMail({
-    from: email, // sender address
-    to: "dmeet1008@gmail.com", // list of receivers
+    from: "dmeet1008@gmail.com", // sender address
+    to: email, // list of receivers
     subject: "Hello meet desai ✔", // Subject line
     html: `<b>your otp is ${otp} !!</b>`, // html body
   });
@@ -449,8 +449,6 @@ const sendMail = asyncHandler(async (req, res, next) => {
       email,
     })
   );
-
-  next();
 });
 
 // ---------------------------------- otp verification -----------------------------------
@@ -462,8 +460,8 @@ const otpVerfication = asyncHandler(async (req, res) => {
   if (otpClient.toString() !== user?.otpDetails?.otp) {
     throw new ApiError(401, "invalid or wrong otp!!");
   }
-  user.isVarify=true;
-   user.save({validateBeforeSave:false});
+  user.isVarify = true;
+  user.save({ validateBeforeSave: false });
   return res
     .status(200)
     .send(new ApiResponse(200, {}, "verified successfully!!"));
