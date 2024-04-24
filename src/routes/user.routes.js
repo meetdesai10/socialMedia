@@ -12,6 +12,7 @@ import {
   getUserProfile,
   getAllUser,
   profilePicture,
+  checkUserVerifyOrnot,
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -59,3 +60,6 @@ router.route("/send-otp-mail").post(sendMail);
 
 // ---------------------- otp verification ------------------
 router.route("/verify-otp/:otpClient").post(otpVerfication);
+
+// ---------------------- check user verify or not ------------------
+router.route("/verifyUser").post(checkUserVerifyOrnot);

@@ -456,6 +456,7 @@ const otpVerfication = asyncHandler(async (req, res) => {
   const { otpClient } = req?.params;
   const { email } = req?.body;
   const user = await User.findOne({ email });
+  console.log("🚀 ~ otpVerfication ~ user:", user);
 
   if (otpClient.toString() !== user?.otpDetails?.otp) {
     throw new ApiError(401, "invalid or wrong otp!!");
@@ -467,6 +468,34 @@ const otpVerfication = asyncHandler(async (req, res) => {
     .send(new ApiResponse(200, {}, "verified successfully!!"));
 });
 
+// ----------------------------------- check user verify or not ------------------------------------
+const checkUserVerifyOrnot = asyncHandler(async (req, res) => {
+  const { userName, password } = req?.body;
+  //  check user name
+  if (!userName) {
+    throw new ApiError(401, "username required!!");
+  }
+
+  // find user
+  const user = await User.findOne({ userName });
+
+  if (!user) {
+    throw new ApiError(401, "user does not exist!!");
+  }
+
+  // check password is correct or not
+
+  const isPasswordCorrect = await user.isPasswordCorrect(password);
+
+  if (!isPasswordCorrect) {
+    throw new ApiError(401, "wrong password");
+  }
+  return res
+    .status(200)
+    .send(
+      new ApiResponse(200, { isVarify: user?.isVarify, email: user?.email })
+    );
+});
 //---------------------------------- export all files ---------------------------------
 
 export {
@@ -482,4 +511,5 @@ export {
   sendMail,
   otpVerfication,
   getUserProfile,
+  checkUserVerifyOrnot,
 };
