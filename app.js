@@ -10,8 +10,8 @@ app.use(express.json());
 
 app.use(
   cors({
-    // origin: ["https://social-media-frontend-lovat.vercel.app/","http://localhost:3000"],
-    origin: "*",
+    origin: ["https://social-media-frontend-lovat.vercel.app","http://localhost:3000"],
+    // origin: "*",
     credentials: true,
   })
 );
