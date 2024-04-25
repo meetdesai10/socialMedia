@@ -269,8 +269,14 @@ const forgetPassword = asyncHandler(async (req, res) => {
 
   // find user
 
-  const user = await User.findById(email);
+  const user = await User.findOne({ email });
+  // check user esit or not
 
+  if (!user) {
+    throw new ApiError(401, "user not found!!");
+  }
+
+  // check password
   if (newPassword !== confirmPassword) {
     throw new ApiError(401, "new and confirm password does not match");
   }
