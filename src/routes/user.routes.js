@@ -50,7 +50,7 @@ router.route("/get-all-users").get(verifyJwt, getAllUser);
 router.route("/reset-password").post(verifyJwt, resetPassword);
 
 // --------------------------forget password------------------
-router.route("/forget-password").post(forgetPassword);
+router.route("/forget-password").post(verifyJwt, forgetPassword);
 
 //---------------------- update Account Details---------------
 router.route("/update-account-details").post(verifyJwt, updateAccountDetails);

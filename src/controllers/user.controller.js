@@ -178,7 +178,6 @@ const loginUser = asyncHandler(async (req, res) => {
   const loggedInUser = await User.findById(isUserExist?._id).select(
     "-password -refreshToken"
   );
-
   // send response
   res
     .cookie("accessToken", accessToken, options)
@@ -209,8 +208,8 @@ const logOutUser = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
+    .clearCookie("accessToken", { path: "/" })
+    .clearCookie("refreshToken", { path: "/" })
     .send({ message: "User logged Out" });
 });
 
@@ -286,6 +285,7 @@ const forgetPassword = asyncHandler(async (req, res) => {
   await user.save({ validateBeforeSave: false });
 
   res
+    .clearCookie("accessToken", { path: "/" })
     .status(200)
     .send(new ApiResponse(config.SUCCESS, {}, "password forget successfully"));
 });
@@ -461,16 +461,18 @@ const otpVerfication = asyncHandler(async (req, res) => {
   const { otpClient } = req?.params;
   const { email } = req?.body;
   const user = await User.findOne({ email });
-  console.log("🚀 ~ otpVerfication ~ user:", user);
 
   if (otpClient.toString() !== user?.otpDetails?.otp) {
     throw new ApiError(401, "invalid or wrong otp!!");
   }
   user.isVarify = true;
   user.save({ validateBeforeSave: false });
+  const token = await user.generateAccessToken();
+
   return res
+    .cookie("accessToken", token, options)
     .status(200)
-    .send(new ApiResponse(200, {}, "verified successfully!!"));
+    .send(new ApiResponse(200, token, "verified successfully!!"));
 });
 
 // ----------------------------------- check user verify or not ------------------------------------
