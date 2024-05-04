@@ -15,7 +15,7 @@ const options = {
   maxAge: thirtyDaysInMilliseconds,
   httpOnly: true,
   secure: true,
-  domain: 'localhost',
+  // domain: 'localhost',
   sameSite: "strict",
   path: "/",
 };
