@@ -15,6 +15,6 @@ dbConnect()
     console.log("somthig went wrong", error);
   });
 
-
-
-
+app.get("/test", (req, res) => {
+  res.send("true");
+});
