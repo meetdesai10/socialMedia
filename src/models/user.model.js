@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "pelase provide fristname"],
     },
+    role:{
+      type:String,
+      default:"user"
+    },
     lastName: {
       type: String,
       require: [true, "plase provide lastname"],
@@ -143,3 +147,11 @@ userSchema.methods.generaterefreshToken = async function () {
 };
 
 export const User = mongoose.model("User", userSchema);
+
+
+//   PORT=8000
+// DB_URL=mongodb+srv://meetdesai10:Meet1008@cluster0.zcopetw.mongodb.net/socialMedia
+// // # DB_URL = mongodb://localhost:27017/socialMedia
+// ACCESSTOKEN_SECRATE=dhaslasjdhashdu464654asdis7asmo@#d&%^%&
+// REFERESHTOKEN_SECRATE=sdhasodsdh^%#*B)U#*&T#G#&(GT#)dsdas
+// ACCESSTOKEN_EXPIRY=1h
