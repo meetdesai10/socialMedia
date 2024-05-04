@@ -15,7 +15,7 @@ const options = {
   maxAge: thirtyDaysInMilliseconds,
   httpOnly: true,
   secure: true,
-  // domain: 'localhost',
+  domain: ".social-media-rho-ecru.vercel.app",
   sameSite: "strict",
   path: "/",
 };
