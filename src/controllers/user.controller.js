@@ -9,7 +9,9 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 // ----------------- cookie options --------------------
 const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
 const thirtyDaysInMilliseconds = 30 * oneDayInMilliseconds;
+const expiryDate = new Date(Date.now() + thirtyDaysInMilliseconds);
 const options = {
+  expires: expiryDate,
   maxAge: thirtyDaysInMilliseconds,
   httpOnly: true,
   secure: true,
